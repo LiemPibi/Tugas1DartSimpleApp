@@ -1,0 +1,82 @@
+import 'dart:io';
+
+class Expense {
+  final double amount;
+  final String category;
+  final String? note;
+  final DateTime date;
+
+  Expense({required this.amount, required this.category, this.note, required this.date});
+}
+
+class ExpenseTracker {
+  final List<Expense> _expenses = [];
+
+  void addExpense(Expense expense) {
+    _expenses.add(expense);
+  }
+
+  List<Expense> getExpenses() {
+    return _expenses;
+  }
+
+  double getTotalExpenses({required DateTime startDate, required DateTime endDate}) {
+    return _expenses
+        .where((expense) => expense.date.isAfter(startDate) && expense.date.isBefore(endDate))
+        .fold(0, (sum, expense) => sum + expense.amount);
+  }
+}
+
+void main() {
+  final ExpenseTracker expenseTracker = ExpenseTracker();
+
+  while (true) {
+    print('Aplikasi Keuangan Sederhana');
+    print('1. Tambah Pengeluaran');
+    print('2. Lihat Pengeluaran');
+    print('3. Lihat Total Pengeluaran');
+    print('4. Keluar');
+
+    stdout.write('Pilih menu: ');
+    String? input = stdin.readLineSync();
+
+    switch (input) {
+      case '1':
+        stdout.write('Jumlah pengeluaran: ');
+        double amount = double.parse(stdin.readLineSync()!);
+        stdout.write('Kategori: ');
+        String category = stdin.readLineSync()!;
+        stdout.write('Catatan (opsional): ');
+        String? note = stdin.readLineSync();
+        expenseTracker.addExpense(Expense(
+          amount: amount,
+          category: category,
+          note: note,
+          date: DateTime.now(),
+        ));
+        break;
+      case '2':
+        print('Pengeluaran:');
+        expenseTracker.getExpenses().forEach((expense) {
+          print('Rp ${expense.amount} - ${expense.category} - ${expense.date}');
+          if (expense.note != null) {
+            print('Catatan: ${expense.note}');
+          }
+        });
+        break;
+      case '3':
+        stdout.write('Tanggal awal (yyyy-mm-dd): ');
+        DateTime startDate = DateTime.parse(stdin.readLineSync()!);
+        stdout.write('Tanggal akhir (yyyy-mm-dd): ');
+        DateTime endDate = DateTime.parse(stdin.readLineSync()!);
+        double totalExpenses = expenseTracker.getTotalExpenses(startDate: startDate, endDate: endDate);
+        print('Total pengeluaran: Rp $totalExpenses');
+        break;
+      case '4':
+        print('Keluar dari aplikasi');
+        return;
+      default:
+        print('Menu tidak valid');
+    }
+  }
+}
