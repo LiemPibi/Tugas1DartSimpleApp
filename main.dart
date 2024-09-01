@@ -1,65 +1,137 @@
+import 'package:flutter/material.dart';
+
+// This is the main function that runs the app
 void main() {
+  runApp(MyApp());
+}
+
+// This is the main app widget
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Simple Finance App', // title of the app
+      home: MyHomePage(), // home page of the app
+    );
+  }
+}
+
+// This is the home page widget
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+// This is the state of the home page
+class _MyHomePageState extends State<MyHomePage> {
+  // These are the text controllers for the input fields
+  final _amountController = TextEditingController();
+  final _categoryController = TextEditingController();
+  final _dateController = TextEditingController();
+
+  // This is the list of expenses
   List<Map<String, dynamic>> expenses = [];
 
-  while (true) {
-    print("Simple Finance App");
-    print("1. Add Expense");
-    print("2. View Expenses");
-    print("3. View Total Expenses");
-    print("4. Exit App");
+  // This function is called when the "Add Expense" button is pressed
+  void _addExpense() {
+    // Get the input values from the text fields
+    double amount = double.parse(_amountController.text);
+    String category = _categoryController.text;
+    String date = _dateController.text;
 
-    int choice = int.parse(stdin.readLineSync()!);
+    // Create a new expense map
+    Map<String, dynamic> expense = {
+      "amount": amount,
+      "category": category,
+      "date": date,
+    };
 
-    switch (choice) {
-      case 1:
-        addExpense(expenses);
-        break;
-      case 2:
-        viewExpenses(expenses);
-        break;
-      case 3:
-        viewTotalExpenses(expenses);
-        break;
-      case 4:
-        print("Exiting app.");
-        return;
-      default:
-        print("Invalid choice. Please try again.");
+    // Add the expense to the list
+    setState(() {
+      expenses.add(expense);
+    });
+
+    // Clear the input fields
+    _amountController.clear();
+    _categoryController.clear();
+    _dateController.clear();
+
+    print("Expense added successfully!");
+  }
+
+  // This function is called when the "View Expenses" button is pressed
+  void _viewExpenses() {
+    print("Expenses:");
+    for (Map<String, dynamic> expense in expenses) {
+      print("  Amount: ${expense["amount"]}");
+      print("  Category: ${expense["category"]}");
+      print("  Date: ${expense["date"]}");
+      print();
     }
   }
-}
 
-void addExpense(List<Map<String, dynamic>> expenses) {
-  print("Enter amount:");
-  double amount = double.parse(stdin.readLineSync()!);
-
-  print("Enter category:");
-  String category = stdin.readLineSync()!;
-
-  print("Enter date (yyyy-mm-dd):");
-  String date = stdin.readLineSync()!;
-
-  Map<String, dynamic> expense = {
-    "amount": amount,
-    "category": category,
-    "date": date,
-  };
-
-  expenses.add(expense);
-  print("Expense added successfully!");
-}
-
-void viewExpenses(List<Map<String, dynamic>> expenses) {
-  print("Expenses:");
-  for (Map<String, dynamic> expense in expenses) {
-    print("  Amount: ${expense["amount"]}");
-    print("  Category: ${expense["category"]}");
-    print("  Date: ${expense["date"]}");
-    print();
+  // This function is called when the "View Total Expenses" button is pressed
+  void _viewTotalExpenses() {
+    double totalAmount = expenses.fold(0, (sum, expense) => sum + expense["amount"]);
+    print("Total expenses: $totalAmount");
   }
-}
 
-void viewTotalExpenses(List<Map<String, dynamic>> expenses) {
-  double totalAmount = expenses.fold(0, (sum, expense) => sum + expense["amount"]);
-  print("Total expenses: $totalAmount");
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Simple Finance App'), // title of the app bar
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0), // add some padding around the content
+        child: Column(
+          children: [
+            // Input fields for amount, category, and date
+            TextField(
+              controller: _amountController,
+              decoration: InputDecoration(labelText: 'Enter amount'),
+            ),
+            TextField(
+              controller: _categoryController,
+              decoration: InputDecoration(labelText: 'Enter category'),
+            ),
+            TextField(
+              controller: _dateController,
+              decoration: InputDecoration(labelText: 'Enter date (yyyy-mm-dd)'),
+            ),
+            // Buttons for adding, viewing, and totaling expenses
+            ElevatedButton(
+              onPressed: _addExpense,
+              child: Text('Add Expense'),
+            ),
+            ElevatedButton(
+              onPressed: _viewExpenses,
+              child: Text('View Expenses'),
+            ),
+            ElevatedButton(
+              onPressed: _viewTotalExpenses,
+              child: Text('View Total Expenses'),
+            ),
+            SizedBox(height: 20), // add some space between the buttons and the list
+            Text(
+              'Expenses:',
+              style: TextStyle(fontSize: 18),
+            ),
+            // List view to display the expenses
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: expenses.length,
+              itemBuilder: (context, index) {
+                Map<String, dynamic> expense = expenses[index];
+                return ListTile(
+                  title: Text('Amount: ${expense["amount"]}'),
+                  subtitle: Text('Category: ${expense["category"]}, Date: ${expense["date"]}'),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
