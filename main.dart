@@ -2,47 +2,35 @@ void main() {
   var expenses = [];
 
   while (true) {
-    print('Aplikasi Keuangan Sederhana');
-    print('1. Tambah Pengeluaran');
-    print('2. Lihat Pengeluaran');
-    print('3. Lihat Total Pengeluaran');
-    print('4. Keluar');
+    print('Simple Finance App');
+    print('1. Add Expense');
+    print('2. View Expenses');
+    print('3. View Total Expenses');
+    print('4. Exit');
 
-    // Hardcoded input values
-    var input = '1';
+    var input = '1'; // hardcoded input for now
 
     switch (input) {
       case '1':
-        var amountStr = '1000';
-        double amount = double.parse(amountStr);
+        var amount = 1000;
         var category = 'Food';
-        var note = '';
-        expenses.add({'amount': amount, 'category': category, 'note': note.isEmpty ? null : note, 'date': DateTime.now()});
+        expenses.add({'amount': amount, 'category': category, 'date': DateTime.now()});
         break;
       case '2':
-        print('Pengeluaran:');
+        print('Expenses:');
         expenses.forEach((expense) {
           print('Rp ${expense['amount']} - ${expense['category']} - ${expense['date']}');
-          if (expense['note'] != null) {
-            print('Catatan: ${expense['note']}');
-          }
         });
         break;
       case '3':
-        var startDateStr = '2022-01-01';
-        DateTime startDate = DateTime.parse(startDateStr);
-        var endDateStr = '2022-01-31';
-        DateTime endDate = DateTime.parse(endDateStr);
-        double totalExpenses = expenses
-            .where((expense) => expense['date'].isAfter(startDate) && expense['date'].isBefore(endDate))
-            .fold(0, (sum, expense) => sum + expense['amount']);
-        print('Total pengeluaran: Rp $totalExpenses');
+        var totalExpenses = expenses.fold(0, (sum, expense) => sum + expense['amount']);
+        print('Total expenses: Rp $totalExpenses');
         break;
       case '4':
-        print('Keluar dari aplikasi');
+        print('Exiting app');
         return;
       default:
-        print('Menu tidak valid');
+        print('Invalid menu');
     }
   }
 }
