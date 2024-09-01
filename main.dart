@@ -1,131 +1,131 @@
 import 'package:flutter/material.dart';
 
-// This is the main function that runs the app
+// Fungsi utama yang menjalankan aplikasi
 void main() {
   runApp(MyApp());
 }
 
-// This is the main app widget
+// Widget aplikasi utama
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Simple Finance App', // title of the app
-      home: MyHomePage(), // home page of the app
+      title: 'Aplikasi Keuangan Sederhana', // judul aplikasi
+      home: MyHomePage(), // halaman utama aplikasi
     );
   }
 }
 
-// This is the home page widget
+// Widget halaman utama
 class MyHomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-// This is the state of the home page
+// State halaman utama
 class _MyHomePageState extends State<MyHomePage> {
-  // These are the text controllers for the input fields
+  // Kontroler teks untuk input fields
   final _amountController = TextEditingController();
   final _categoryController = TextEditingController();
   final _dateController = TextEditingController();
 
-  // This is the list of expenses
+  // Daftar pengeluaran
   List<Map<String, dynamic>> expenses = [];
 
-  // This function is called when the "Add Expense" button is pressed
+  // Fungsi yang dipanggil ketika tombol "Tambah Pengeluaran" ditekan
   void _addExpense() {
-    // Get the input values from the text fields
+    // Dapatkan nilai input dari input fields
     double amount = double.parse(_amountController.text);
     String category = _categoryController.text;
     String date = _dateController.text;
 
-    // Create a new expense map
+    // Buat map pengeluaran baru
     Map<String, dynamic> expense = {
       "amount": amount,
       "category": category,
       "date": date,
     };
 
-    // Add the expense to the list
+    // Tambahkan pengeluaran ke daftar
     setState(() {
       expenses.add(expense);
     });
 
-    // Clear the input fields
+    // Bersihkan input fields
     _amountController.clear();
     _categoryController.clear();
     _dateController.clear();
 
-    print("Expense added successfully!");
+    print("Pengeluaran berhasil ditambahkan!");
   }
 
-  // This function is called when the "View Expenses" button is pressed
+  // Fungsi yang dipanggil ketika tombol "Lihat Pengeluaran" ditekan
   void _viewExpenses() {
-    print("Expenses:");
+    print("Pengeluaran:");
     for (Map<String, dynamic> expense in expenses) {
-      print("  Amount: ${expense["amount"]}");
-      print("  Category: ${expense["category"]}");
-      print("  Date: ${expense["date"]}");
+      print("  Jumlah: ${expense["amount"]}");
+      print("  Kategori: ${expense["category"]}");
+      print("  Tanggal: ${expense["date"]}");
       print();
     }
   }
 
-  // This function is called when the "View Total Expenses" button is pressed
+  // Fungsi yang dipanggil ketika tombol "Lihat Total Pengeluaran" ditekan
   void _viewTotalExpenses() {
     double totalAmount = expenses.fold(0, (sum, expense) => sum + expense["amount"]);
-    print("Total expenses: $totalAmount");
+    print("Total pengeluaran: $totalAmount");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Simple Finance App'), // title of the app bar
+        title: Text('Aplikasi Keuangan Sederhana'), // judul aplikasi
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0), // add some padding around the content
+        padding: const EdgeInsets.all(20.0), // tambahkan padding sekitar konten
         child: Column(
           children: [
-            // Input fields for amount, category, and date
+            // Input fields untuk jumlah, kategori, dan tanggal
             TextField(
               controller: _amountController,
-              decoration: InputDecoration(labelText: 'Enter amount'),
+              decoration: InputDecoration(labelText: 'Masukkan jumlah'),
             ),
             TextField(
               controller: _categoryController,
-              decoration: InputDecoration(labelText: 'Enter category'),
+              decoration: InputDecoration(labelText: 'Masukkan kategori'),
             ),
             TextField(
               controller: _dateController,
-              decoration: InputDecoration(labelText: 'Enter date (yyyy-mm-dd)'),
+              decoration: InputDecoration(labelText: 'Masukkan tanggal (yyyy-mm-dd)'),
             ),
-            // Buttons for adding, viewing, and totaling expenses
+            // Tombol untuk menambah, melihat, dan menghitung pengeluaran
             ElevatedButton(
               onPressed: _addExpense,
-              child: Text('Add Expense'),
+              child: Text('Tambah Pengeluaran'),
             ),
             ElevatedButton(
               onPressed: _viewExpenses,
-              child: Text('View Expenses'),
+              child: Text('Lihat Pengeluaran'),
             ),
             ElevatedButton(
               onPressed: _viewTotalExpenses,
-              child: Text('View Total Expenses'),
+              child: Text('Lihat Total Pengeluaran'),
             ),
-            SizedBox(height: 20), // add some space between the buttons and the list
+            SizedBox(height: 20), // tambahkan ruang antara tombol dan daftar
             Text(
-              'Expenses:',
+              'Pengeluaran:',
               style: TextStyle(fontSize: 18),
             ),
-            // List view to display the expenses
+            // List view untuk menampilkan pengeluaran
             ListView.builder(
               shrinkWrap: true,
               itemCount: expenses.length,
               itemBuilder: (context, index) {
                 Map<String, dynamic> expense = expenses[index];
                 return ListTile(
-                  title: Text('Amount: ${expense["amount"]}'),
-                  subtitle: Text('Category: ${expense["category"]}, Date: ${expense["date"]}'),
+                  title: Text('Jumlah: ${expense["amount"]}'),
+                  subtitle: Text('Kategori: ${expense["category"]}, Tanggal: ${expense["date"]}'),
                 );
               },
             ),
